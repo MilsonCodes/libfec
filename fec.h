@@ -180,4 +180,88 @@ int decode_rs_ccsds(unsigned char *data,int *eras_pos,int no_eras,int pad);
  */
 extern unsigned char Taltab[],Tal1tab[];
 
+
+/* CPU SIMD instruction set available */
+extern enum cpu_mode {UNKNOWN=0,PORT,MMX,SSE,SSE2,ALTIVEC} Cpu_mode;
+
+/* Determine parity of argument: 1 = odd, 0 = even */
+#ifdef __i386__
+static inline int parityb(unsigned char x){
+  __asm__ __volatile__ ("test %1,%1;setpo %0" : "=g"(x) : "r" (x));
+  return x;
+}
+#else
+void partab_init();
+
+static inline int parityb(unsigned char x){
+  extern unsigned char Partab[256];
+  extern int P_init;
+  if(!P_init){
+    partab_init();
+  }
+  return Partab[x];
+}
+#endif
+
+
+static inline int parity(int x){
+  /* Fold down to one byte */
+  x ^= (x >> 16);
+  x ^= (x >> 8);
+  return parityb(x);
+}
+
+/* Useful utilities for simulation */
+double normal_rand(double mean, double std_dev);
+unsigned char addnoise(int sym,double amp,double gain,double offset,int clip);
+
+extern int Bitcnt[];
+
+/* Dot product functions */
+void *initdp(signed short coeffs[],int len);
+void freedp(void *dp);
+long dotprod(void *dp,signed short a[]);
+
+void *initdp_port(signed short coeffs[],int len);
+void freedp_port(void *dp);
+long dotprod_port(void *dp,signed short a[]);
+
+#ifdef __i386__
+void *initdp_mmx(signed short coeffs[],int len);
+void freedp_mmx(void *dp);
+long dotprod_mmx(void *dp,signed short a[]);
+
+void *initdp_sse(signed short coeffs[],int len);
+void freedp_sse(void *dp);
+long dotprod_sse(void *dp,signed short a[]);
+
+void *initdp_sse2(signed short coeffs[],int len);
+void freedp_sse2(void *dp);
+long dotprod_sse2(void *dp,signed short a[]);
+#endif
+
+#ifdef __VEC__
+void *initdp_av(signed short coeffs[],int len);
+void freedp_av(void *dp);
+long dotprod_av(void *dp,signed short a[]);
+#endif
+
+/* Sum of squares - accepts signed shorts, produces unsigned long long */
+unsigned long long sumsq(signed short *in,int cnt);
+unsigned long long sumsq_port(signed short *in,int cnt);
+
+#ifdef __i386__
+unsigned long long sumsq_mmx(signed short *in,int cnt);
+unsigned long long sumsq_sse(signed short *in,int cnt);
+unsigned long long sumsq_sse2(signed short *in,int cnt);
+#endif
+#ifdef __VEC__
+unsigned long long sumsq_av(signed short *in,int cnt);
+#endif
+
+
+/* Low-level data structures and routines */
+
+int cpu_features(void);
+
 #endif /* _FEC_H_ */
