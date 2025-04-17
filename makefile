@@ -7,12 +7,11 @@ srcdir = .
 prefix = /usr/local
 exec_prefix=${prefix}
 CC=gcc
-LIBS=viterbi27_mmx.o mmxbfly27.o viterbi27_sse.o ssebfly27.o viterbi27_sse2.o sse2bfly27.o 	viterbi29_mmx.o mmxbfly29.o viterbi29_sse.o ssebfly29.o viterbi29_sse2.o sse2bfly29.o 	viterbi615_mmx.o viterbi615_sse.o viterbi615_sse2.o 	dotprod_mmx.o dotprod_mmx_assist.o 	dotprod_sse2.o dotprod_sse2_assist.o 	peakval_mmx.o peakval_mmx_assist.o 	peakval_sse.o peakval_sse_assist.o 	peakval_sse2.o peakval_sse2_assist.o 	sumsq.o sumsq_port.o 	sumsq_sse2.o sumsq_sse2_assist.o 	sumsq_mmx.o sumsq_mmx_assist.o 	cpu_features.o cpu_mode_x86.o fec.o sim.o viterbi27.o viterbi27_port.o viterbi29.o viterbi29_port.o \
+LIBS=viterbi27_mmx.o mmxbfly27.o viterbi27_sse.o ssebfly27.o viterbi27_sse2.o sse2bfly27.o 	viterbi29_mmx.o mmxbfly29.o viterbi29_sse.o ssebfly29.o viterbi29_sse2.o sse2bfly29.o 	viterbi615_mmx.o viterbi615_sse.o viterbi615_sse2.o 	peakval_mmx.o peakval_mmx_assist.o 	peakval_sse.o peakval_sse_assist.o 	peakval_sse2.o peakval_sse2_assist.o 	sumsq.o sumsq_port.o 	sumsq_sse2.o sumsq_sse2_assist.o 	sumsq_mmx.o sumsq_mmx_assist.o 	cpu_features.o cpu_mode_x86.o fec.o sim.o viterbi27.o viterbi27_port.o viterbi29.o viterbi29_port.o \
 	viterbi615.o viterbi615_port.o encode_rs_char.o encode_rs_int.o encode_rs_8.o \
 	decode_rs_char.o decode_rs_int.o decode_rs_8.o \
 	init_rs_char.o init_rs_int.o ccsds_tab.o \
 	encode_rs_ccsds.o decode_rs_ccsds.o ccsds_tal.o \
-	dotprod.o dotprod_port.o \
 	peakval.o peakval_port.o \
 	sumsq.o sumsq_port.o
 
@@ -30,7 +29,7 @@ test: vtest27 vtest29 vtest615 rstest dtest sumsq_test peaktest
 	./vtest615 -e 1.0 -n 100 -v
 	./vtest615
 	./rstest
-	./dtest
+	# ./dtest
 	# ./sumsq_test
 	# ./peaktest
 
@@ -87,9 +86,9 @@ libfec.dylib: $(LIBS)
 libfec.so: $(LIBS)
 	gcc -shared -Xlinker -soname=$@ -o $@ -Wl,-whole-archive $^ -Wl,-no-whole-archive -lc
 
-dotprod.o: dotprod.c fec.h
+# dotprod.o: dotprod.c fec.h
 
-dotprod_port.o: dotprod_port.c fec.h
+# dotprod_port.o: dotprod_port.c fec.h
 
 viterbi27.o: viterbi27.c fec.h
 
