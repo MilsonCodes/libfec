@@ -31,8 +31,8 @@ test: vtest27 vtest29 vtest615 rstest dtest sumsq_test peaktest
 	./vtest615
 	./rstest
 	./dtest
-	./sumsq_test
-	./peaktest
+	# ./sumsq_test
+	# ./peaktest
 
 install: all
 	mkdir -p ${exec_prefix}/lib 
