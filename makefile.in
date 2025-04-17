@@ -13,8 +13,6 @@ LIBS=@MLIBS@ fec.o sim.o viterbi27.o viterbi27_port.o viterbi29.o viterbi29_port
 	decode_rs_char.o decode_rs_int.o decode_rs_8.o \
 	init_rs_char.o init_rs_int.o ccsds_tab.o \
 	encode_rs_ccsds.o decode_rs_ccsds.o ccsds_tal.o \
-	peakval.o peakval_port.o \
-	sumsq.o sumsq_port.o
 
 CFLAGS=@CFLAGS@ -I. -Wall @ARCH_OPTION@
 
@@ -31,8 +29,6 @@ test: vtest27 vtest29 vtest615 rstest dtest sumsq_test peaktest
 	./vtest615
 	./rstest
 	./dtest
-	./sumsq_test
-	./peaktest
 
 install: all
 	mkdir -p @libdir@ 
@@ -43,12 +39,6 @@ install: all
 	install -m 644 -p fec.h @includedir@
 	mkdir -m 0755 -p @mandir@/man3
 	install -m 644 -p simd-viterbi.3 rs.3 dsp.3 @mandir@/man3
-
-peaktest: peaktest.o libfec.a
-	gcc -g -o $@ $^
-
-sumsq_test: sumsq_test.o libfec.a
-	gcc -g -o $@ $^
 
 dtest: dtest.o libfec.a
 	gcc -g -o $@ $^ -lm
@@ -188,9 +178,9 @@ viterbi615_sse.o: viterbi615_sse.c fec.h
 viterbi615_sse2.o: viterbi615_sse2.c fec.h
 	gcc $(CFLAGS) -msse2 -c -o $@ $<
 
-cpu_mode_x86.o: cpu_mode_x86.c fec.h
+# cpu_mode_x86.o: cpu_mode_x86.c fec.h
 
-cpu_mode_ppc.o: cpu_mode_ppc.c fec.h
+# cpu_mode_ppc.o: cpu_mode_ppc.c fec.h
 
 
 clean:
